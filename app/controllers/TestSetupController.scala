@@ -16,6 +16,25 @@
 
 package controllers
 
-class TestSetupController {
+import model.{Error, NinoBPPairing}
+import play.api.libs.json.Json
+import play.api.mvc.{Action, BodyParsers, Results}
+import play.api.mvc.Results.{BadRequest, Ok}
+import play.mvc.Result
+import staticTestData.StaticStore._
+import uk.gov.hmrc.play.microservice.controller.BaseController
 
+import scala.concurrent.Future
+
+object TestSetupController extends TestSetupController
+
+class TestSetupController extends BaseController {
+  def insertBPNinoPairing() = Action.async(BodyParsers.parse.json) { implicit request =>
+    val bpNinoJs = request.body.validate[NinoBPPairing]
+    bpNinoJs.fold(
+      errors => Future.successful(BadRequest(Json.toJson(Error(message="body failed falidation with errors: " + errors)))),
+      bpNino => {ninoBpLinkings.put(bpNino.nino, bpNino.bp)
+        Future.successful(Ok(Json.toJson(Error(message="Success"))))}
+    )
+  }
 }

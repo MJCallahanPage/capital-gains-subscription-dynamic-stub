@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package model
 
 import play.api.libs.json.Json
-import play.api.mvc._
-import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.collection.mutable.HashMap
-import play.api.mvc.Results.Ok
-import staticTestData.StaticStore._
-import scala.concurrent.Future
-
-object StubController extends StubController {
-}
-
-trait StubController extends BaseController {
-
-  def readBP(nino: String) = Action.async { implicit request =>
-   val bp = ninoBpLinkings.getOrElse(nino, -1)
-    Future.successful(Ok(bp.toString))
-  }
-
-
+case class NinoBPPairing (
+                         nino: String,
+                         bp: Int
+                         )
+object NinoBPPairing {
+  implicit val ninoBPPairing = Json.format[NinoBPPairing]
 }
