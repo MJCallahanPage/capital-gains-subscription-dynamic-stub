@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.collection.mutable.HashMap
 import play.api.mvc.Results.Ok
 import staticTestData.StaticStore._
+
 import scala.concurrent.Future
 
 object StubController extends StubController {
@@ -32,7 +33,32 @@ trait StubController extends BaseController {
 
   def readBP(nino: String) = Action.async { implicit request =>
    val bp = ninoBpLinkings.getOrElse(nino, -1)
+    if(bp == -1) {
+      val newBp = generateRandomBp(nino)
+      Future.successful(Ok(newBp.toString))
+    }
     Future.successful(Ok(bp.toString))
+  }
+
+  def generateRandomBp(nino:String): Future[Int] = {
+    def generate(generated: Int): Int ={
+      if(generated == -1){
+        //edge case: first instance
+        generate(scala.util.Random.nextInt())
+      }
+      if(!ninoBpLinkings.exists(_ == (nino -> generated))){
+        //if generated BP not associated with a nino return
+        ninoBpLinkings.put(nino, generated)
+        //place as new entry
+        generated
+        //return
+      }
+      else{
+        //otherwise generate a new BP
+        generate(scala.util.Random.nextInt())
+      }
+    }
+    Future.successful(generate(-1))
   }
 
 
