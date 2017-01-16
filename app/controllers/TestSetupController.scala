@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.capitalgainssubscriptiondynamicstub.controllers
+package controllers
 
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.mvc._
-import scala.concurrent.Future
+class TestSetupController {
 
-object MicroserviceHelloWorld extends MicroserviceHelloWorld
-
-trait MicroserviceHelloWorld extends BaseController {
-
-	def hello() = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
 }

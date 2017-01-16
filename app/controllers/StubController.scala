@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.capitalgainssubscriptiondynamicstub.controllers
+package controllers
 
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import play.api.libs.json.Json
 import play.api.mvc._
+import uk.gov.hmrc.play.microservice.controller.BaseController
+
+import scala.collection.immutable.HashMap
+import play.api.mvc.Results.Ok
+
 import scala.concurrent.Future
 
-object MicroserviceHelloWorld extends MicroserviceHelloWorld
+object StubController extends StubController {
+  var ninoBpLinkings:Map[String, Int] = Map("abc" -> 1, "def" -> 2)
+}
 
-trait MicroserviceHelloWorld extends BaseController {
+trait StubController extends BaseController {
 
-	def hello() = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
+  var ninoBpLinkings:Map[String, Int]
+
+  def readBP(nino: String) = Action.async { implicit request =>
+   val bp = ninoBpLinkings(nino)
+    Future.successful(Ok(bp.toString))
+  }
+
 }
