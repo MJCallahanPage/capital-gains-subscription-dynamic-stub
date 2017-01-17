@@ -19,12 +19,13 @@ package controllers
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.microservice.controller.BaseController
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.mutable.HashMap
 import play.api.mvc.Results.Ok
+import scala.concurrent.duration._
 import staticTestData.StaticStore._
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
 
 object StubController extends StubController {
 }
@@ -33,33 +34,29 @@ trait StubController extends BaseController {
 
   def readBP(nino: String) = Action.async { implicit request =>
    val bp = ninoBpLinkings.getOrElse(nino, -1)
-    if(bp == -1) {
-      val newBp = generateRandomBp(nino)
-      Future.successful(Ok(newBp.toString))
-    }
-    Future.successful(Ok(bp.toString))
+    /*if(bp == -1) {
+      val x = for {
+        bpx <- generateRandomBp(nino)
+      } yield bp
+      Future.successful(Ok(x.toString))
+    }*/
+      Future.successful(Ok(bp.toString))
   }
 
-  def generateRandomBp(nino:String): Future[Int] = {
+  /*def generateRandomBp(nino:String): Future[Int] = {
+
+    def prevEntryExists(nino:): Unit ={
+
+    }
+
     def generate(generated: Int): Int ={
-      if(generated == -1){
-        //edge case: first instance
-        generate(scala.util.Random.nextInt())
-      }
-      if(!ninoBpLinkings.exists(_ == (nino -> generated))){
-        //if generated BP not associated with a nino return
-        ninoBpLinkings.put(nino, generated)
-        //place as new entry
-        generated
-        //return
-      }
-      else{
-        //otherwise generate a new BP
-        generate(scala.util.Random.nextInt())
-      }
+     generated match {
+       case -1 => generate(scala.util.Random.nextInt(10000))
+       case ninoBpLinkings.exists(_ == (`nino`-> generated)) =>
+     }
     }
     Future.successful(generate(-1))
-  }
+  }*/
 
 
 }
