@@ -34,29 +34,7 @@ trait StubController extends BaseController {
 
   def readBP(nino: String) = Action.async { implicit request =>
    val bp = ninoBpLinkings.getOrElse(nino, -1)
-    /*if(bp == -1) {
-      val x = for {
-        bpx <- generateRandomBp(nino)
-      } yield bp
-      Future.successful(Ok(x.toString))
-    }*/
       Future.successful(Ok(bp.toString))
   }
-
-  /*def generateRandomBp(nino:String): Future[Int] = {
-
-    def prevEntryExists(nino:): Unit ={
-
-    }
-
-    def generate(generated: Int): Int ={
-     generated match {
-       case -1 => generate(scala.util.Random.nextInt(10000))
-       case ninoBpLinkings.exists(_ == (`nino`-> generated)) =>
-     }
-    }
-    Future.successful(generate(-1))
-  }*/
-
 
 }
