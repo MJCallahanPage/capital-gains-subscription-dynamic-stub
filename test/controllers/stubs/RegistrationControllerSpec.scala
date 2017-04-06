@@ -120,7 +120,7 @@ class RegistrationControllerSpec extends UnitSpec with MockitoSugar with WithFak
       "return a valid SAP" in {
         val data = contentAsString(result)
         val json = Json.parse(data)
-        json.as[String] shouldBe "123456789"
+        (json \ "safeId").as[String] shouldBe "123456789"
       }
     }
 

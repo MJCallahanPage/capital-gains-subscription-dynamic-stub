@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import actions.ExceptionTriggersActions
 import common.RouteIds
+import common.JsonResponses
 import helpers.SapHelper
 import models.BusinessPartnerModel
 import play.api.Logger
@@ -87,9 +88,9 @@ class RegistrationController @Inject()(repository: BusinessPartnerRepository,
       guardedActions.ExceptionTriggers(nino, RouteIds.getExistingSap).async {
         implicit request => {
 
-          Logger.warn("Received a call from the back end to retrieve details/SAP for a preexisting business business partner")
+          Logger.info("Received a call from the back end to retrieve details/SAP for a preexisting business business partner")
 
-          Logger.warn("Opening connection to Mongo")
+          Logger.info("Opening connection to Mongo")
 
           val businessPartner: Future[List[BusinessPartnerModel]] = repository().findLatestVersionBy(Nino(nino))
 
@@ -110,7 +111,7 @@ class RegistrationController @Inject()(repository: BusinessPartnerRepository,
             if (sap == "-1")
               BadRequest
             else
-              Ok(Json.toJson(sap))
+              Ok(JsonResponses.desRegisterResponse(sap))
           }
 
           for {
