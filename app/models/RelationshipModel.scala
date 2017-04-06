@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class RelationshipModel(arn: String, cgtRef: String)
+case class RelationshipModel(agentReferenceNumber: String, refNumber: String)
 
 object RelationshipModel {
   implicit val formats: OFormat[RelationshipModel] = Json.format[RelationshipModel]
